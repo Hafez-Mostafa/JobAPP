@@ -19,7 +19,11 @@ const route = Router()
 route.post('/',auth(systemRoles.company_HR),UC.createCompany)
 route.patch('/update',auth(systemRoles.company_HR),UC.updateCompany)
 route.delete('/delete/:companyName',auth(systemRoles.company_HR),UC.deleteCompany)
+
+
 route.get('/data/:companyId',auth(systemRoles.company_HR),UC.companyData)
+route.get('/search/:companyName',auth(systemRoles.company_HR,systemRoles.user),UC.searchCompany)
+route.get('/applications/:jobId',auth(systemRoles.company_HR),UC.jobApplications)
 
 
 

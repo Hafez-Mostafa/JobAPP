@@ -2,15 +2,16 @@ import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.resolve('../../../config/.env') });
 
+//models
 import companyModel from '../../../db/models/company.model.js';
+import applicationModel from '../../../db/models/application.model.js';
+import jobModel from '../../../db/models/job.model.js';
+
+
 import AppError from "../../../utils/AppError.js";
 import { asyncHandling } from "../../../utils/errorHandling.js";
-import systemRoles from '../../../utils/systemRoles.js';
-import { ta } from 'date-fns/locale';
-import mongoose, { mongo } from 'mongoose';
-import userModel from '../../../db/models/user.model.js';
-
-
+import mongoose from 'mongoose';
+//===============================createCompany=======================================================
 export const createCompany = asyncHandling(async (req, res, next) => {
     const { companyName, description, industry, address, numberOfEmployees, companyEmail } = req.body;
     const { role } = req.user;
@@ -31,25 +32,18 @@ export const createCompany = asyncHandling(async (req, res, next) => {
     res.status(201).json({ msg: 'Company created successfully', newCompany });
 });
 
-
-
+//===============================updateCompany=======================================================
 export const updateCompany = asyncHandling(async (req, res, next) => {
     const { companyName, newCompName, description, industry,
         address, numberOfEmployees, newEmail } = req.body;
-
     const targetCompany = await companyModel.findOne({ companyName });
     if (!targetCompany) return next(new AppError('Company not found', 404));
-
     if (!targetCompany.companyHR.equals(new mongoose.Types.ObjectId(req.user.id)))
         return next(new AppError('You are not allowed to update the company', 403));
-
-
     const existingCompanyByName = await companyModel.findOne({ companyName: newCompName });
     if (existingCompanyByName) return next(new AppError('Company name already exists', 409));
-
     const existingCompanyByEmail = await companyModel.findOne({ companyEmail: newEmail });
     if (existingCompanyByEmail) return next(new AppError('Company email is already in use', 400));
-
     const updatedCompany = await companyModel.updateOne({
         companyName: newCompName || targetCompany.companyName,
         description: description || targetCompany.description,
@@ -58,63 +52,49 @@ export const updateCompany = asyncHandling(async (req, res, next) => {
         numberOfEmployees: numberOfEmployees || targetCompany.numberOfEmployees,
         companyEmail: newEmail || targetCompany.companyEmail,
     });
-
     if (!updatedCompany) return next(new AppError('Error Updating Company', 400));
     res.status(200).json({ msg: 'Company updated successfully', updatedCompany: updatedCompany });
 });
 
+//===============================deleteCompany=======================================================
 
 export const deleteCompany = asyncHandling(async (req, res, next) => {
     const { companyName } = req.params
     const company = await companyModel.findOne({ companyName });
     if (!company) return next(new AppError('Company not found', 404));
-
     if (!company.companyHR.equals(new mongoose.Types.ObjectId(req.user.id)))
         return next(new AppError('You are not allowed to update the company', 403));
-
-
     const deleteCompany = await companyModel.deleteOne({_id:company._id});
-
     if (!deleteCompany) return next(new AppError('Error Updating Company', 400));
     res.status(200).json({ msg: 'Company delete successfully', deleteCompany: deleteCompany });
 });
 
-
-// 4. Get company data
-//     - send the companyId in params to get the desired company data
-//     - return all jobs related to this company
-//     - apply authorization with role ( Company_HR)
-
-
+//===============================companyData=======================================================
 export const companyData = asyncHandling(async(req,res,next)=>{
-
     const {companyId}=req.params
-
-   const company = await companyModel.findById(companyId)
-   company || next(new AppError('company not found',404))
-
-   res.status(201).json({msg:"success",company})
-
-
+    const company = await companyModel.findById(companyId)
+    company || next(new AppError('company not found',404))
+    const jobs = await jobModel.find({ addedBy: company.companyHR });
+    jobs || next(new AppError('company not found',404))
+   res.status(201).json({msg:"success",jobs})
 })
-
-// 5. Search for a company with a name.
-//     - apply authorization with the role ( Company_HR and User)
-
-
+//===============================CompanSearchy=======================================================
 export const searchCompany = asyncHandling(async(req,res,next)=>{
-
     const {companyName}=req.params
-
    const company = await companyModel.findOne({companyName})
    company || next(new AppError('company not found',404))
-
    res.status(201).json({msg:"success",company})
-
-
 })
-// 6. Get all applications for specific Job
-// - each company Owner can take a look at the applications 
-//     for his jobs only, he has no access to other companies’ application
-// - return each application with the user data, not the userId
-//- apply authorization with role (  Company_HR )
+
+//===============================jobApplications=======================================================
+export const jobApplications = asyncHandling(async (req, res, next) => {
+    const { jobId } = req.params;
+    const job = await jobModel.findById(jobId);
+    job ||  next(new AppError('Job not found', 404));
+    if (job.addedBy.toString() !== req.user.id) { 
+        return next(new AppError('You do not have permission to view applications for this job', 403));
+    }
+    const applications = await applicationModel.find({ jobId }).populate('userId', '-password -__v');
+    !applications.length && next(new AppError('No applications found for this job', 404));
+    res.status(200).json({ msg: "success", applications });
+});

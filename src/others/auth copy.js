@@ -5,18 +5,18 @@ import AppError from "../../utils/AppError.js";
 import jwt from 'jsonwebtoken';
 import userModel from "../../db/models/user.model.js";
 
-
- export const auth = (...roles) => {
+export const auth = (roles = []) => {
     return async (req, res, next) => {
         try {
             // Authentication
-            const {token} = req.headers;
+            const { token } = req.headers;
             if (!token) return next(new AppError('Token not found', 404));
+
             const bearer = process.env.JWT_BEARER;
             if (!token.startsWith(bearer)) return next(new AppError('Invalid Bearer', 400));
 
             const newToken = token.slice(bearer.length).trim();
-            const decoded = jwt.verify(newToken, process.env.JWT_SECRET);
+            let decoded = jwt.verify(newToken, process.env.JWT_SECRET);
             if (!decoded) return next(new AppError('Invalid signature', 400));
 
             const user = await userModel.findById(decoded.id);
@@ -38,5 +38,3 @@ import userModel from "../../db/models/user.model.js";
         }
     };
 };
-
-// export default auth;

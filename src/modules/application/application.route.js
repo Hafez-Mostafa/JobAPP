@@ -15,7 +15,7 @@ import systemRoles from "../../../utils/systemRoles.js";
 
 const route = Router()
 
-route.post('/',configureUpload(fileTypes.pdf).single('userResume'),UC.createApplication)
+route.post('/',configureUpload(fileTypes.pdf).single('userResume'),auth(systemRoles.user),UC.createApplication)
 
 
 

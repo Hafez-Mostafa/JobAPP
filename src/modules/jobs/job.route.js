@@ -16,9 +16,13 @@ import systemRoles from "../../../utils/systemRoles.js";
 
 const route = Router()
 
-route.post('/',auth(systemRoles.job_HR),UC.createjob)
-route.patch('/update/:id',auth(systemRoles.job_HR),UC.updatejob)
-route.delete('/delete/:id',auth(systemRoles.job_HR),UC.deletejob)
+route.post('/',auth(systemRoles.company_HR),UC.createjob)
+route.patch('/update/:id',auth(systemRoles.company_HR),UC.updatejob)
+route.delete('/delete/:id',auth(systemRoles.company_HR),UC.deletejob)
+route.get('/jobsWithCompaniesInfo',auth(systemRoles.company_HR,systemRoles.user),UC.getAllJobsWithCompaniesInfo)
+route.get('/jobsWithCompanyInfo',auth(systemRoles.company_HR,systemRoles.user),UC.getAllJobsWithACompanyInfo)
+
+
 
 
 

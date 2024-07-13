@@ -37,6 +37,10 @@ const jobSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'Company HR ID is required!']
+    },company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+        required: true
     }
 }, {
     timestamps: true
