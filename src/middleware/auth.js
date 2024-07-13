@@ -18,13 +18,9 @@ import userModel from "../../db/models/user.model.js";
             const newToken = token.slice(bearer.length).trim();
             const decoded = jwt.verify(newToken, process.env.JWT_SECRET);
             if (!decoded) return next(new AppError('Invalid signature', 400));
-
             const user = await userModel.findById(decoded.id);
             if (!user) return next(new AppError('User is invalid', 400));
-
             req.user = user;
-            console.log(req.user)
-
             // Authorization
             if (!roles.includes(user.role)) {
                 return next(new AppError('You do not have permission', 403));
