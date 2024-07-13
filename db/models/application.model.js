@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-
 const applicationSchema = new Schema({
     jobId: {
         type: Schema.Types.ObjectId,
@@ -21,14 +20,10 @@ const applicationSchema = new Schema({
         required: [true, 'User resume is required!']
     },
     userResume: {
-        secure_url: {
-            type: String,
-            required: [true, 'User resume URL is required!']
-        },
-        public_id: {
-            type: String,
-            required: [true, 'User resume public ID is required!']
-        }
+        secure_url: String,
+
+        public_id: String,
+
     }
 }, {
     timestamps: true

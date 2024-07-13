@@ -32,6 +32,8 @@ app.use(express.json());
 app.use('/users',routes.userRoutr)
 app.use('/company',routes.companyRoutr)
 app.use('/jobs',routes.jobRoutr)
+app.use('/applications',routes.applicationRoutr)
+
 
 
 

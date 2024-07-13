@@ -8,6 +8,7 @@ import { asyncHandling } from "../../../utils/errorHandling.js";
 import systemRoles from '../../../utils/systemRoles.js';
 import { ta } from 'date-fns/locale';
 import mongoose, { mongo } from 'mongoose';
+import userModel from '../../../db/models/user.model.js';
 
 
 export const createCompany = asyncHandling(async (req, res, next) => {
@@ -83,9 +84,37 @@ export const deleteCompany = asyncHandling(async (req, res, next) => {
 //     - send the companyId in params to get the desired company data
 //     - return all jobs related to this company
 //     - apply authorization with role ( Company_HR)
+
+
+export const companyData = asyncHandling(async(req,res,next)=>{
+
+    const {companyId}=req.params
+
+   const company = await companyModel.findById(companyId)
+   company || next(new AppError('company not found',404))
+
+   res.status(201).json({msg:"success",company})
+
+
+})
+
 // 5. Search for a company with a name.
 //     - apply authorization with the role ( Company_HR and User)
+
+
+export const searchCompany = asyncHandling(async(req,res,next)=>{
+
+    const {companyName}=req.params
+
+   const company = await companyModel.findOne({companyName})
+   company || next(new AppError('company not found',404))
+
+   res.status(201).json({msg:"success",company})
+
+
+})
 // 6. Get all applications for specific Job
-//     - each company Owner can take a look at the applications for his jobs only, he has no access to other companies’ application
-//     - return each application with the user data, not the userId
-//     - apply authorization with role (  Company_HR )
+// - each company Owner can take a look at the applications 
+//     for his jobs only, he has no access to other companies’ application
+// - return each application with the user data, not the userId
+//- apply authorization with role (  Company_HR )
