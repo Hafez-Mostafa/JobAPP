@@ -1,8 +1,8 @@
 import { Router } from "express";
 //contoller
-import * as UC from './company.controller.js'
+import * as CC from './company.controller.js'
 //validation
-import * as UV from "./company.validation.js";
+import * as CV from "./validation.js";
 import {validation} from '../../middleware/validation.js'
 // file management
 import configureUpload from "../../middleware/multer.js";
@@ -16,14 +16,14 @@ import systemRoles from "../../../utils/systemRoles.js";
 
 const route = Router()
 
-route.post('/',auth(systemRoles.company_HR),UC.createCompany)
-route.patch('/update',auth(systemRoles.company_HR),UC.updateCompany)
-route.delete('/delete/:companyName',auth(systemRoles.company_HR),UC.deleteCompany)
+route.post('/',validation(CV.companyValidation),auth([systemRoles.company_HR]),CC.createCompany)
+route.patch('/update',auth([systemRoles.company_HR]),CC.updateCompany)
+route.delete('/delete/:companyName',validation(CV.nameValidation),auth([systemRoles.company_HR]),CC.deleteCompany)
 
 
-route.get('/data/:companyId',auth(systemRoles.company_HR),UC.companyData)
-route.get('/search/:companyName',auth(systemRoles.company_HR,systemRoles.user),UC.searchCompany)
-route.get('/applications/:jobId',auth(systemRoles.company_HR),UC.jobApplications)
+route.get('/data/:companyId',validation(CV.companyIdValidation),auth([systemRoles.company_HR]),CC.companyData)
+route.get('/search/:companyName',validation(CV.nameValidation),auth([systemRoles.company_HR],systemRoles.user),CC.searchCompany)
+route.get('/applications/:jobId',validation(CV.jobIdValidation),auth([systemRoles.company_HR]),CC.jobApplications)
 
 
 

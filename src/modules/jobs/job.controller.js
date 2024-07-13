@@ -8,19 +8,18 @@ import companyModel from '../../../db/models/company.model.js';
 
 import AppError from "../../../utils/AppError.js";
 import { asyncHandling } from "../../../utils/errorHandling.js";
-import systemRoles from '../../../utils/systemRoles.js';
-import mongoose, { mongo } from 'mongoose';
 
+//============================================createjob=================================
 
-export const createjob = asyncHandling(async (req, res, next) => {
+export const createJob = asyncHandling(async (req, res, next) => {
     const { jobTitle, jobLocation, workingTime, seniorityLevel,
-        jobDescription, technicalSkills, softSkills,company
+        jobDescription, technicalSkills, softSkills, company
     } = req.body;
 
     // Create new job
     const job = new jobModel({
         jobTitle, jobLocation, workingTime, seniorityLevel,
-        jobDescription, technicalSkills, softSkills, addedBy: req.user.id,company
+        jobDescription, technicalSkills, softSkills, addedBy: req.user.id, company
     });
     const newjob = await job.save();
     if (!newjob) return next(new AppError('job could not be created', 400));
@@ -28,9 +27,10 @@ export const createjob = asyncHandling(async (req, res, next) => {
     res.status(201).json({ msg: 'job created successfully', newjob });
 });
 
+//=================================updatejob=============================================
 
 
-export const updatejob = asyncHandling(async (req, res, next) => {
+export const updateJob = asyncHandling(async (req, res, next) => {
     const { jobTitle, jobLocation, workingTime, seniorityLevel,
         jobDescription, technicalSkills, softSkills } = req.body;
     const { id } = req.params
@@ -39,8 +39,6 @@ export const updatejob = asyncHandling(async (req, res, next) => {
 
     if (!job.addedBy.equals(new mongoose.Types.ObjectId(req.user.id)))
         return next(new AppError('You are not allowed to update the job', 403));
-
-
     const updatedjob = await jobModel.findByIdAndUpdate(job._id, {
         jobTitle: jobTitle || job.jobTitle,
         jobLocation: jobLocation || job.jobLocation,
@@ -55,16 +53,15 @@ export const updatejob = asyncHandling(async (req, res, next) => {
     res.status(200).json({ msg: 'job updated successfully', updatedjob: updatedjob });
 });
 
+//=================================deletejob===============================
 
-export const deletejob = asyncHandling(async (req, res, next) => {
+export const deleteJob = asyncHandling(async (req, res, next) => {
     const { id } = req.params
     const job = await jobModel.findById(id);
     if (!job) return next(new AppError('job not found', 404));
 
     if (!job.addedBy.equals(new mongoose.Types.ObjectId(req.user.id)))
         return next(new AppError('You are not allowed to update the job', 403));
-
-
     const deletejob = await jobModel.deleteOne({ _id: job._id });
 
     if (!deletejob) return next(new AppError('Error Updating job', 400));
@@ -73,41 +70,41 @@ export const deletejob = asyncHandling(async (req, res, next) => {
 
 
 
-// 4. Get all Jobs with their company’s information.
-//     - apply authorization with the role ( User , Company_HR )
-export const getAllJobsWithCompaniesInfo= asyncHandling(async (req,res,next)=>{
-    const jobs = await jobModel.find({}).populate([{path:'company' }])
-    !jobs &&  next(new AppError('Error fetching job', 400));
+//=================================getAllJobsWithCompaniesInfo===============================
+
+export const getAllJobsWithCompaniesInfo = asyncHandling(async (req, res, next) => {
+    const jobs = await jobModel.find({}).populate([{ path: 'company' }])
+    !jobs && next(new AppError('Error fetching job', 400));
     res.status(200).json({ msg: 'jobs fetched successfully', jobs });
 })
 
 
-//========================================================================================
-// // 5. Get all Jobs for a specific company.
-// //     - apply authorization with the role ( User , Company_HR )
-// //     - send the company name in the query and get this company jobs.
+//=================================getAllJobsWithACompanyInfo================================
 
-export const getAllJobsWithACompanyInfo= asyncHandling(async (req,res,next)=>{
-
-    const {compName}=req.query
-    const jobs = await jobModel.find({company:compName}).populate([{path:'company' }])
-    !jobs &&  next(new AppError('Error fetching job', 400));
+export const getAllJobsWithACompanyInfo = asyncHandling(async (req, res, next) => {
+    const { companyName } = req.query
+    const company = await companyModel.find({ companyName })
+    const jobs = await jobModel.find({ company: company[0]._id }).populate([{ path: 'company' }])
+    !jobs && next(new AppError('Error fetching job', 400));
     res.status(200).json({ msg: 'jobs fetched successfully', jobs });
 })
 
 
+//=================================getAllJobsWithMatching================================
 
-// // 6. Get all Jobs that match the following filters 
+export const getAllJobsWithMatching = asyncHandling(async (req, res, next) => {
+    const { jobLocation, workingTime, seniorityLevel, jobTitle, technicalSkills } = req.query;
+    let query = {};
+    if (jobLocation) query.jobLocation = jobLocation;
+    if (workingTime) query.workingTime = workingTime;
+    if (seniorityLevel) query.seniorityLevel = seniorityLevel;
+    if (jobTitle) query.jobTitle = jobTitle;
+    if (technicalSkills) query.technicalSkills = { $in: technicalSkills.split(',') };
+    const jobs = await jobModel.find(query).exec();
+    if (!jobs || jobs.length === 0) {
+        return next(new AppError('No jobs found matching the specified criteria', 404));
+    }
+    res.status(200).json({ msg: 'Jobs fetched successfully', jobs });
 
-// //     - allow user to filter with workingTime , jobLocation , seniorityLevel and jobTitle,technicalSkills
-// //     - one or more of them should applied
-// //     **Exmaple** : if the user selects the   
-// //     **workingTime** is **part-time** and the **jobLocation** is **onsite** 
-// //     , we need to return all jobs that match these conditions
-// //     - apply authorization with the role ( User , Company_HR )
-
-// export const getAllJobsWithMatching= asyncHandling(async (req,res,next)=>{
-    
-    
-// })
+});
 

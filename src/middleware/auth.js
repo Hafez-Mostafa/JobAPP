@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import userModel from "../../db/models/user.model.js";
 
 
- export const auth = (...roles) => {
+ export const auth = (roles=[]) => {
     return async (req, res, next) => {
         try {
             // Authentication
@@ -23,9 +23,10 @@ import userModel from "../../db/models/user.model.js";
             if (!user) return next(new AppError('User is invalid', 400));
 
             req.user = user;
+            console.log(req.user)
 
             // Authorization
-            if (roles.length && !roles.includes(user.role)) {
+            if (!roles.includes(user.role)) {
                 return next(new AppError('You do not have permission', 403));
             }
 

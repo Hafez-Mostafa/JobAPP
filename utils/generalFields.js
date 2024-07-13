@@ -1,7 +1,7 @@
 import Joi from "joi";
 import mongoose from "mongoose";
 
-const objectValidator = (value, helper) => {
+export const objectValidator = (value, helper) => {
     return mongoose.Types.ObjectId.isValid(value) ? true : helper.message('invalid ID Value')
 
 }

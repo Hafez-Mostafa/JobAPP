@@ -2,7 +2,7 @@ import { Router } from "express";
 //contoller
 import * as UC from './application.controller.js'
 //validation
-import * as UV from "./application.validation.js";
+import * as AV from "./validation.js";
 import {validation} from '../../middleware/validation.js'
 // file management
 import configureUpload from "../../middleware/multer.js";
@@ -15,7 +15,7 @@ import systemRoles from "../../../utils/systemRoles.js";
 
 const route = Router()
 
-route.post('/',configureUpload(fileTypes.pdf).single('userResume'),auth(systemRoles.user),UC.createApplication)
+route.post('/',configureUpload(fileTypes.pdf).single('userResume'),validation(AV.applicationValidation),auth(systemRoles.user),UC.createApplication)
 
 
 
