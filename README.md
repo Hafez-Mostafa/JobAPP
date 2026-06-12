@@ -7,19 +7,28 @@ Beschreibung: Die Anwendung ist eine einfache Job-APP, die im Rahmen eines Backe
 Das Ziel der Anwendung ist es, grundlagende Backend-Konzepte wie Routing, Datenverarbeitung und Strukturierung von Code zu lernen.
 
 Architektur & Technologien
+
 Die Anwendung basiert auf einer klassischen MVC-Architektur (Model-View-Controller)
 
 Verwendete Technologien
+
 Node.js – Backend-Laufzeitumgebung
+
 Express.js – Webframework für Routing und Middleware
+
 MongoDB – NoSQL-Datenbank zur Speicherung der Daten
+
 Mongoose – ODM (Object Data Modeling) für MongoDB
+
 JWT (JSON Web Token) – Authentifizierung und Sicherung von Endpunkten
 
 Architekturprinzip
 Die Anwendung ist nach dem MVC-Muster aufgebaut:
+
 Model → Datenstruktur (z. B. User, Job, Company)
+
 Controller → Logik und Verarbeitung der Requests
+
 Routes → Definieren der API-Endpunkte
 
 
