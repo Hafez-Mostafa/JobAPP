@@ -1,7 +1,9 @@
 # JobAPP
 
 Projektname: JOBAPP-MAIN
-Beschreibung: Die Anwendung ist eine einfache Job-APP, die im Rahmen eines Backend_Entwicklerkurses erstellt wurde. Sie basiert auf der MVC-Architektur und wurde mit Node.Js und Express entwickelt.
+
+Beschreibung: Die Anwendung ist eine einfache Job-APP, die im Rahmen eines Backend_Entwicklerkurses erstellt wurde. Sie basiert auf der MVC-Architektur und wurde mit Node.Js und Express entwickelt. 
+
 Das Ziel der Anwendung ist es, grundlagende Backend-Konzepte wie Routing, Datenverarbeitung und Strukturierung von Code zu lernen.
 
 Architektur & Technologien
