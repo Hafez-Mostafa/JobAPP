@@ -1,37 +1,94 @@
-# JobAPP
+# 🚀 JOBAPP-MAIN
 
-Projektname: JOBAPP-MAIN
+## 🧩 Überblick
 
-Beschreibung: Die Anwendung ist eine einfache Job-APP, die im Rahmen eines Backend_Entwicklerkurses erstellt wurde. Sie basiert auf der MVC-Architektur und wurde mit Node.Js und Express entwickelt. 
+**JOBAPP-MAIN** ist eine einfache Job-Backend-Anwendung, die im Rahmen eines Backend-Entwicklerkurses erstellt wurde.
 
-Das Ziel der Anwendung ist es, grundlagende Backend-Konzepte wie Routing, Datenverarbeitung und Strukturierung von Code zu lernen.
+Die Anwendung basiert auf der **MVC-Architektur** und wurde mit **Node.js** und **Express.js** entwickelt.
 
-Architektur & Technologien
+🎯 Ziel des Projekts ist es, grundlegende Backend-Konzepte zu erlernen, wie:
+- Routing
+- Datenverarbeitung
+- Strukturierte Code-Organisation
 
-Die Anwendung basiert auf einer klassischen MVC-Architektur (Model-View-Controller)
+---
 
-Verwendete Technologien
+## ⚙️ Funktionen
 
-Node.js – Backend-Laufzeitumgebung
+### 👤 Benutzerverwaltung
+- Registrierung (Sign Up)
+- Anmeldung (Login)
+- E-Mail-Bestätigung
+- Benutzer löschen
+- Passwort zurücksetzen
 
-Express.js – Webframework für Routing und Middleware
+### 💼 Jobs & Unternehmen
+- Jobs erstellen, bearbeiten, löschen, abrufen
+- Unternehmen verwalten (CRUD)
 
-MongoDB – NoSQL-Datenbank zur Speicherung der Daten
+### 📄 Bewerbungen
+- Bewerbungen auf Jobs erstellen
 
-Mongoose – ODM (Object Data Modeling) für MongoDB
+---
 
-JWT (JSON Web Token) – Authentifizierung und Sicherung von Endpunkten
+## 🏗️ Architektur & Technologien
 
-Architekturprinzip
-Die Anwendung ist nach dem MVC-Muster aufgebaut:
+### 🔧 Verwendete Technologien
 
-Model → Datenstruktur (z. B. User, Job, Company)
+- **Node.js** – Backend-Laufzeitumgebung  
+- **Express.js** – Webframework für APIs und Routing  
+- **MongoDB** – NoSQL-Datenbank  
+- **Mongoose** – ODM zur Datenmodellierung  
+- **JWT (JSON Web Token)** – Authentifizierung  
 
-Controller → Logik und Verarbeitung der Requests
+---
 
-Routes → Definieren der API-Endpunkte
+## 🧱 Architekturprinzip (MVC)
 
+Die Anwendung folgt dem MVC-Muster:
 
+- **Model** → Definiert die Datenstruktur (z. B. User, Job, Company)  
+- **Controller** → Enthält die Geschäftslogik  
+- **Routes** → Definiert die API-Endpunkte  
 
-Job Application with Nodjs express mongoose
-Postman: https://blue-shuttle-937874.postman.co/workspace/Mosmoyas~33af06e5-6e6f-4ea1-8617-306faaf1f85d/collection/9521947-fb27d53a-deac-4042-867f-858eae64478a?action=share&creator=9521947
+---
+
+## 🌐 API-Struktur
+
+### Basis-Routen
+
+| Route | Beschreibung |
+|------|-------------|
+| `/users` | Benutzerverwaltung |
+| `/company` | Unternehmensverwaltung |
+| `/jobs` | Job-Management |
+| `/applications` | Bewerbungen |
+
+---
+
+## 🖥️ Server
+
+Der Server wird mit Express initialisiert und enthält:
+
+- CORS-Konfiguration
+- JSON Middleware
+- Routenverwaltung
+- Globale Fehlerbehandlung
+
+---
+
+## 📡 API-Dokumentation (Postman)
+
+👉 Hier kannst du alle Endpunkte testen:
+
+🔗 [Postman Collection öffnen](https://blue-shuttle-937874.postman.co/workspace/Mosmoyas~33af06e5-6e6f-4ea1-8617-306faaf1f85d/collection/9521947-fb27d53a-deac-4042-867f-858eae64478a?action=share&creator=9521947)
+
+---
+
+## 🚀 Installation & Setup
+
+```bash
+git clone <repository-url>
+cd JOBAPP-MAIN
+npm install
+npm start
